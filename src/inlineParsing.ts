@@ -49,18 +49,18 @@ export const inlineParsing = async (
         newContent = `${newContent}
 start-time:: ${parsedStartObject.date().toTimeString().substring(0, 5)}
 end-time:: ${parsedEndObject.date().toTimeString().substring(0, 5)}`;
-      } else if (content.includes(`@${parsedText}`)) {
+      } else if (content.includes(`^${parsedText}`)) {
         newContent = content.replace(
-          `@${parsedText}`,
+          `^${parsedText}`,
           getDateForPage(parsedDate, logseq.settings!.preferredDateFormat)
         );
-      } else if (content.includes(`%${parsedText}`)) {
+      } else if (content.includes(`*${parsedText}`)) {
         // Experiment notifications
         if (logseq.settings!.notifications) {
           const reminder = new Date(parsedDate).getTime() - Date.now();
 
           window.setTimeout(() => {
-            snoozeFunction(content.replace(`%${parsedText}`, ""));
+            snoozeFunction(content.replace(`*${parsedText}`, ""));
           }, reminder);
         }
 
@@ -70,23 +70,21 @@ end-time:: ${parsedEndObject.date().toTimeString().substring(0, 5)}`;
           } else {
             newContent = content.replace(
               content,
-              `${content.replace(`%${parsedText}`, "")}
-SCHEDULED: <${getScheduledDeadlineDateDay(parsedDate)}${
-                parsedStartObject.knownValues.hour !== undefined
-                  ? ` ${parsedDate.toTimeString().substring(0, 5)}`
-                  : ``
+              `${content.replace(`*${parsedText}`, "")}
+SCHEDULED: <${getScheduledDeadlineDateDay(parsedDate)}${parsedStartObject.knownValues.hour !== undefined
+                ? ` ${parsedDate.toTimeString().substring(0, 5)}`
+                : ``
               }>`
             );
           }
         });
-      } else if (content.includes(`^${parsedText}`)) {
+      } else if (content.includes(`@${parsedText}`)) {
         newContent = content.replace(
           content,
-          `${content.replace(`^${parsedText}`, "")}
-DEADLINE: <${getScheduledDeadlineDateDay(parsedDate)}${
-            parsedStartObject.knownValues.hour !== undefined
-              ? ` ${parsedDate.toTimeString().substring(0, 5)}`
-              : ``
+          `${content.replace(`@${parsedText}`, "")}
+DEADLINE: <${getScheduledDeadlineDateDay(parsedDate)}${parsedStartObject.knownValues.hour !== undefined
+            ? ` ${parsedDate.toTimeString().substring(0, 5)}`
+            : ``
           }>`
         );
       }

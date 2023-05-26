@@ -13,7 +13,7 @@ export const semiAutoParsing = (currBlock: BlockEntity, chronoBlock: any[]) => {
     parsedEndObject = chronoBlock[0].end;
     return { parsedText, parsedStartObject, parsedEndObject };
   } else {
-    const specialChars = ["@", "%", "^"];
+    const specialChars = ["@", "*", "^"];
 
     for (const c of specialChars) {
       for (const i of chronoBlock) {
